@@ -19,6 +19,11 @@ async function run() {
     const database = client.db("travely");
     const roomCollection = database.collection("rooms");
 
+    // test GET API
+    app.get("/", (req, res) => {
+      res.send("This is Test API");
+    });
+
     app.get("/rooms", async (req, res) => {
       console.log("mongodb connected sucess");
       const result = await roomCollection.find({}).toArray();
