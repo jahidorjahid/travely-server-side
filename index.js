@@ -48,7 +48,32 @@ async function run() {
     app.post("/rooms", async (req, res) => {
       const booking = req.body;
       const result = await bookingRoomCollection.insertOne(booking);
-      res.send(result);
+      if (result.insertedId) {
+        res.send(result);
+      }
+    });
+
+    // GET all booking
+    app.get("/bookings", async (req, res) => {
+      const query = {};
+      const result = await bookingRoomCollection.find(query).toArray();
+      if (result.length > 0) {
+        res.send(result);
+      }
+    });
+
+    // POST booking info by customerEmail
+    app.post("/bookings/", async (req, res) => {
+      const userEmail = req.body.email;
+      const query = { customerEmail: userEmail };
+      const result = await bookingRoomCollection.find(query).toArray();
+
+      // print a message if no documents were found
+      if (result.length > 0) {
+        res.send(result);
+      } else {
+        res.send({ error: "No documents found!" });
+      }
     });
   } finally {
     // client.close()
