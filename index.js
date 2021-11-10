@@ -20,6 +20,7 @@ async function run() {
     await client.connect();
     const database = client.db("travely");
     const roomsCollection = database.collection("rooms");
+    const bookingRoomCollection = database.collection("booking");
 
     // test GET API
     app.get("/", (req, res) => {
@@ -41,6 +42,13 @@ async function run() {
       if (room._id == roomId) {
         res.send(room);
       }
+    });
+
+    // POST add booking
+    app.post("/rooms", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingRoomCollection.insertOne(booking);
+      res.send(result);
     });
   } finally {
     // client.close()
