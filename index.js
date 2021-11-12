@@ -54,7 +54,7 @@ async function run() {
     });
 
     // POST add booking
-    app.post("/bookings", async (req, res) => {
+    app.post("/bookings/add", async (req, res) => {
       const booking = req.body;
       const result = await bookingRoomCollection.insertOne(booking);
       if (result.insertedId) {
