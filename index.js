@@ -20,7 +20,7 @@ async function run() {
     await client.connect();
     const database = client.db("travely");
     const roomsCollection = database.collection("rooms");
-    const bookingRoomCollection = database.collection("booking");
+    const bookingRoomCollection = database.collection("bookings");
 
     // test GET API
     app.get("/", (req, res) => {
@@ -46,6 +46,15 @@ async function run() {
 
     // POST add booking
     app.post("/rooms", async (req, res) => {
+      const room = req.body;
+      const result = await roomsCollection.insertOne(room);
+      if (result.insertedId) {
+        res.send(result);
+      }
+    });
+
+    // POST add booking
+    app.post("/bookings", async (req, res) => {
       const booking = req.body;
       const result = await bookingRoomCollection.insertOne(booking);
       if (result.insertedId) {
@@ -63,7 +72,7 @@ async function run() {
     });
 
     // POST booking info by customerEmail
-    app.post("/bookings/", async (req, res) => {
+    app.post("/bookings", async (req, res) => {
       const userEmail = req.body.email;
       const query = { customerEmail: userEmail };
       const result = await bookingRoomCollection.find(query).toArray();
