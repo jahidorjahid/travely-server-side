@@ -24,7 +24,8 @@ async function run() {
 
     // test GET API
     app.get("/", (req, res) => {
-      res.send("This is Test API");
+      // when hit api root url redirect to client side
+      res.redirect("https://travely-web.web.app/");
     });
     // GET all rooms
     app.get("/rooms", async (req, res) => {
@@ -41,6 +42,26 @@ async function run() {
 
       if (room._id == roomId) {
         res.send(room);
+      }
+    });
+
+    // GET rooms by ids
+    app.post("/rooms/ids", async (req, res) => {
+      const roomIds = req.body.ids;
+      const findIds = roomIds.map((roomId) => ObjectId(roomId));
+
+      const query = {
+        _id: {
+          $in: findIds,
+        },
+      };
+      const rooms = await roomsCollection
+        .find(query)
+        .project({ title: 1, price: 1, img1: 1 })
+        .toArray();
+
+      if (rooms) {
+        res.send(rooms);
       }
     });
 
