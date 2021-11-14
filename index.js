@@ -57,7 +57,7 @@ async function run() {
       };
       const rooms = await roomsCollection
         .find(query)
-        .project({ title: 1, price: 1, img1: 1 })
+        .project({ title: 1, price: 1, img1: 1, hostName: 1 })
         .toArray();
 
       if (rooms) {
@@ -81,6 +81,16 @@ async function run() {
       if (result.insertedId) {
         res.send(result);
       }
+    });
+
+    // POST delete booking by id
+    app.post("/bookings/delete", async (req, res) => {
+      console.log(req.body.id);
+      const bookingId = req.body.id;
+      const query = { _id: ObjectId(bookingId) };
+      const result = await bookingRoomCollection.deleteOne(query);
+
+      res.send(result);
     });
 
     // GET all booking
