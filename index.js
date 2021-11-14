@@ -29,7 +29,6 @@ async function run() {
     });
     // GET all rooms
     app.get("/rooms", async (req, res) => {
-      console.log("mongodb connected sucess");
       const result = await roomsCollection.find({}).toArray();
       res.json(result);
     });
@@ -91,6 +90,8 @@ async function run() {
       const result = await bookingRoomCollection.find(query).toArray();
       if (result.length > 0) {
         res.send(result);
+      } else {
+        res.send({ error: "No documents found!" });
       }
     });
 
