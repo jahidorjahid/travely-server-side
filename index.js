@@ -47,7 +47,6 @@ async function run() {
     // POST get room by id
     app.post("/rooms/id", async (req, res) => {
       const roomId = req.body.roomId;
-      console.log("this is room id: ", roomId);
       const query = { _id: ObjectId(roomId) };
       const project = { title: 1, price: 1, img1: 1, hostName: 1 };
       const room = await roomsCollection.findOne(query, project);
