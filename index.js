@@ -34,7 +34,7 @@ async function run() {
       res.json(result);
     });
 
-    // GET room by id
+    // GET get room by id
     app.get("/rooms/:id", async (req, res) => {
       const roomId = req.params.id;
       const query = { _id: ObjectId(roomId) };
@@ -45,23 +45,16 @@ async function run() {
       }
     });
 
-    // GET rooms by ids
-    app.post("/rooms/ids", async (req, res) => {
-      const roomIds = req.body.ids;
-      const findIds = roomIds.map((roomId) => ObjectId(roomId));
+    // POST get room by id
+    app.post("/rooms/id", async (req, res) => {
+      const roomId = req.body.roomId;
+      console.log("this is room id: ", roomId);
+      const query = { _id: ObjectId(roomId) };
+      const project = { title: 1, price: 1, img1: 1, hostName: 1 };
+      const room = await roomsCollection.findOne(query, project);
 
-      const query = {
-        _id: {
-          $in: findIds,
-        },
-      };
-      const rooms = await roomsCollection
-        .find(query)
-        .project({ title: 1, price: 1, img1: 1, hostName: 1 })
-        .toArray();
-
-      if (rooms) {
-        res.send(rooms);
+      if (room._id == roomId) {
+        res.send(room);
       }
     });
 
@@ -85,7 +78,6 @@ async function run() {
 
     // POST delete booking by id
     app.post("/bookings/delete", async (req, res) => {
-      console.log(req.body.id);
       const bookingId = req.body.id;
       const query = { _id: ObjectId(bookingId) };
       const result = await bookingRoomCollection.deleteOne(query);
